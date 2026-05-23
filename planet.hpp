@@ -18,9 +18,9 @@ struct Planet
     Planet& nextPlanet;
 };
 
-void insertPlanet()
+void discoverPlanet()
 {
-
+    
 }
 
 void addHyperspaceRoute()
