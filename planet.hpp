@@ -162,30 +162,32 @@ void resetVisited()
     }
 }
 
-bool initFindRoute(Planet* current, Planet* target, int currentDist, int& finalDist)
+void findShortestRoute(Planet* current, Planet* target, int currentDist, int& minDist, string currentPath, string& bestPath)
 {
     if (current == target)
     {
-        finalDist = currentDist;
-        return true;
+        if (currentDist < minDist)
+        {
+            minDist = currentDist;
+            bestPath = currentPath;
+        }
+        return;
     }
-
     current -> visited = true;
-
     routeEdge* edge = current -> headRoute;
     while (edge != NULL)
     {
         if (!edge -> destination -> visited)
         {
-            if (initFindRoute(edge -> destination, target, currentDist + edge -> distance, finalDist))
+            if (currentDist + edge -> distance < minDist)
             {
-                cout << "    <- " << current -> planetName;
-                return true;
+                string nextPath = " <- " + current -> planetName + currentPath;
+                findShortestRoute(edge -> destination, target, currentDist + edge -> distance, minDist, nextPath, bestPath);
             }
         }
         edge = edge -> next;
     }
-    return false;
+    current -> visited = false; 
 }
 
 void displaySafeRoute()
@@ -209,19 +211,24 @@ void displaySafeRoute()
     }
 
     resetVisited(); 
-    int totalDistance = 0;
+    
+    int shortestDistance = 1000;
+    string bestRouteText = "";
 
-    cout << "\nCalculating hyperspace jumps..." << endl;
-    cout << "Route: " << pDest -> planetName; 
+    cout << "\n[!] Calculating all possible hyperspace jumps..." << endl;
 
-    if (initFindRoute(pOrigin, pDest, 0, totalDistance))
+    findShortestRoute(pOrigin, pDest, 0, shortestDistance, "", bestRouteText);
+
+
+    if (shortestDistance != 1000)
     {
-        cout << "\n\n[+] Safe Route Found!" << endl;
-        cout << "[+] Total Distance: " << totalDistance << " Lightyears" << endl;
+        cout << "Route: " << pDest -> planetName << bestRouteText << endl;
+        cout << "\n[+] Optimal Safe Route Found!" << endl;
+        cout << "[+] Shortest Distance: " << shortestDistance << " Lightyears" << endl;
     }
     else
     {
-        cout << "\n\n [-] NO SAFE ROUTE EXISTS between these planets!" << endl;
+        cout << "\n[-] NO SAFE ROUTE EXISTS between these planets!" << endl;
     }
     system("pause");
 }

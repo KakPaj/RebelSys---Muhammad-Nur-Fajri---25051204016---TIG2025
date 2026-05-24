@@ -1,7 +1,10 @@
-Luke Skywalker|Commander|4|0|NONE
-Kanan Jarrus|Captain|2|0|NONE
-Ezra Bridger|Captain|2|0|NONE
-Chopper|Lieutenant|1|0|NONE
-Sabine Wren|Captain|2|0|NONE
-Zeb|Captain|2|0|NONE
-Hera Syndulla|General|5|0|NONE
+Luke Skywalker|Commander|4|1|Red-1
+Kanan Jarrus|Captain|2|2|Ghost
+Ezra Bridger|Captain|2|2|Ghost
+Chopper|Lieutenant|1|2|Ghost
+R2-D2|Lieutenant|1|0|NONE
+Sabine Wren|Captain|2|2|Ghost
+Zeb|Captain|2|2|Ghost
+Hera Syndulla|General|6|2|Ghost
+Leia Organa|General|6|0|NONE
+Mon Mothma|General|6|0|NONE

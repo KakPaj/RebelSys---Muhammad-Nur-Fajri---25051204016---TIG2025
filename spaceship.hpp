@@ -117,7 +117,7 @@ void assignCrewtoShip(Spaceship* ship, Crew* crew)
 {
     if (crew -> status != 0 || crew -> homeShip != NULL)
     {
-        cout << "[-] Crew " << crew -> crewName << " has already been assigned. Access Terminated. . .";
+        cout << "[-] Crew " << crew -> crewName << " has already been assigned. Access Terminated. . ." << endl;
         system("pause");
         return;   
     }
@@ -225,7 +225,7 @@ void initiateDisplayCrewinShip()
     Squadron* squadTargeted = searchSquadron(hangarDock, squad);
     if (squadTargeted == NULL)
     {
-        cout << "[-] Squadron " << squad << " not found. Access Terminated. . .";
+        cout << "[-] Squadron " << squad << " not found. Access Terminated. . ." << endl;
         system("pause");
         return;
     }
@@ -233,7 +233,7 @@ void initiateDisplayCrewinShip()
     Spaceship* shipTargeted = searchShip(squadTargeted -> headShip, ship);
     if (shipTargeted == NULL)
     {
-        cout << "[-] Ship " << ship << " not found. Access Terminated. . .";
+        cout << "[-] Ship " << ship << " not found. Access Terminated. . ." << endl;
         system("pause");
         return;   
     }

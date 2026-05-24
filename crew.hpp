@@ -53,11 +53,36 @@ Crew* insertCrew(Crew* root, Crew* newCrew)
     return root; 
 }
 
-Crew* searchCrew(Crew* root, string name, int rank)
+Crew* searchCrew(Crew* root, string name, int rankNum)
 {
-    if (root == NULL || root  ->  crewName == name) return root;
-    if (root  ->  rankNum > rank) return searchCrew(root  ->  left, name, rank);
-    return searchCrew(root  ->  right, name, rank);
+    if (root == NULL) 
+    {
+        return NULL;
+    }
+    if (root -> crewName == name && root -> rankNum == rankNum) 
+    {
+        return root;
+    }
+    if (rankNum < root -> rankNum) 
+    {
+        return searchCrew(root -> left, name, rankNum);
+    }
+    else if (rankNum > root -> rankNum) 
+    {
+        return searchCrew(root -> right, name, rankNum);
+    }
+    else 
+    {
+        if (name < root -> crewName) 
+        {
+            return searchCrew(root -> left, name, rankNum);
+        }
+        else if (name > root -> crewName) 
+        {
+            return searchCrew(root -> right, name, rankNum);
+        }
+    }
+    return NULL;
 }
 
 void addNewCrew()

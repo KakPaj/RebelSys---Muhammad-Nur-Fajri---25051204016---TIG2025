@@ -1,2 +1,3 @@
 1261|Meeting-1|1|Endor|0|SUCCESS|Red|NONE
 2487|Steal Fuel|4|Yavin|0|FAILED|Red|NONE
+5467|Patrol|1|Lothal|2|On-Going|Phoenix|Ghost

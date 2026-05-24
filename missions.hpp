@@ -108,13 +108,12 @@ void addMission()
     system("pause");
 }
 
-void displayMissionsBoard(Missions* root)
+void displayMissionsBoard(Missions* root, bool& isAny)
 {
-    bool isAny = false;
     if (root != NULL)
     {
         
-        displayMissionsBoard(root -> left);
+        displayMissionsBoard(root -> left, isAny);
 
         Missions* temp = root;
         while (temp != NULL)
@@ -124,18 +123,12 @@ void displayMissionsBoard(Missions* root)
                 cout << "ID: " << temp -> missionID << " | Level: " << temp -> missionLevel
                     << " | " << temp -> missionName << " (" << temp -> targetPlanet << ") | "
                     << temp -> daysLeft << " Days | Status: " << temp -> endStatus << endl;
-                temp = temp -> next;
                 isAny = true;
             }
+            temp = temp -> next;
         }
 
-        displayMissionsBoard(root -> right);
-    }
-
-    if (isAny == false)
-    {
-        cout << "[-] No missions posted on the board yet." << endl;
-        system("pause");
+        displayMissionsBoard(root -> right, isAny);
     }
 }
 
@@ -152,11 +145,17 @@ void initMissionBoard()
     }
     else 
     {
-        displayMissionsBoard(RootMS);
+        bool isAny = false;
+        displayMissionsBoard(RootMS, isAny);
+        if (isAny == false)
+        {
+            cout << "[-] No active missions available at the moment." << endl;
+        }
     }
             
     cout << "=========================================" << endl;
     system("pause");
+    return;
 }
 
 Missions* searchMissions(Missions* root, int level, int id)
@@ -212,12 +211,15 @@ void startMission(int level, int id, string squad, Spaceship* ship)
     }
 
     resetVisited();
-    int travelDistance = 0;
+    
+    int shortestDistance = 999999;
+    string bestRouteText = "";
 
-    cout << "\n[!] Navi-Computer calculating jump vectors..." << endl;
-    cout << "Route: " << pTarget -> planetName;
+    cout << "\n[!] Navi-Computer calculating optimal jump vectors..." << endl;
+    
+    findShortestRoute(pBase, pTarget, 0, shortestDistance, "", bestRouteText);
 
-    if (!initFindRoute(pBase, pTarget, 0, travelDistance))
+    if (shortestDistance == 1000)
     {
         cout << "\n\n[-] DEPLOYMENT ABORTED!" << endl;
         cout << "[-] No safe hyperspace route exists from " << basePlanetName << " to " << targMission -> targetPlanet << "!" << endl;
@@ -225,7 +227,8 @@ void startMission(int level, int id, string squad, Spaceship* ship)
         return;
     }
 
-    cout << "\n\n[+] Safe Route Plotted! Total Jump Distance: " << travelDistance << " Lightyears." << endl;
+    cout << "Route: " << pTarget -> planetName << bestRouteText << endl;
+    cout << "\n\n[+] Optimal Route Plotted! Total Jump Distance: " << shortestDistance << " Lightyears." << endl;
     cout << "[+] Cleared for deployment sequence.\n" << endl;
 
     Crew* temp = ship -> headCrew;
