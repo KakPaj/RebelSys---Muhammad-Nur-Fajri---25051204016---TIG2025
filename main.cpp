@@ -1,5 +1,8 @@
 #include <iostream>
 #include "crew.hpp"
+#include "input.hpp"
+#include "spaceship.hpp"
+#include "squadron.hpp"
 using namespace std;
 
 void mainMenu()
@@ -11,10 +14,7 @@ void mainMenu()
 
 int main()
 {
-    while(true)
-    {
-        addNewCrew();
-    }
+    
 }
 
 // int main()

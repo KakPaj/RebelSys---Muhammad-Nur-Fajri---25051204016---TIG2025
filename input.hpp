@@ -21,7 +21,7 @@ int inputInt(string prompt) {
 int rankDecode(string prompt)
 {
     string holdPrompt = prompt;
-    rankNM = inputString(prompt);
+    string rankNM = inputString(prompt);
     if (rankNM == "Lieutenant") return 1;
     else if (rankNM == "Captain") return 2;
     else if (rankNM == "Major") return 3;

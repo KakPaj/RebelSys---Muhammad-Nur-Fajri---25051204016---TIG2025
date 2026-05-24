@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "input.hpp"
+#include "spaceship.hpp"
 using namespace std;
 
 struct Crew
@@ -8,11 +9,14 @@ struct Crew
     string crewName;
     int rankNum;
     string rankName;
+    int status;
 
-    Crew* left;
-    Crew* right;
+    Spaceship* homeShip = NULL;
 
-    Crew* next;
+    Crew* left = NULL;
+    Crew* right = NULL;
+
+    Crew* next = NULL;
 };
 
 Crew* Root = NULL;
@@ -30,8 +34,8 @@ Crew* insertCrew(Crew* root, Crew* newCrew)
 Crew* searchCrew(Crew* root, string name, int rank)
 {
     if (root == NULL || root -> crewName == name) return root;
-    if (root -> rankNum < rank) return root -> left = searchCrew(root -> left, name, rank);
-    return root -> right = searchCrew(root -> right, name, rank);
+    if (root -> rankNum > rank) return searchCrew(root -> left, name, rank);
+    return searchCrew(root -> right, name, rank);
 }
 
 void addNewCrew()
@@ -39,13 +43,15 @@ void addNewCrew()
     while (!close)
     {
         system("cls");
-    
-        cout << "======= Rebel Alliance Registration Form =======" << endl;
+        cout << "=========================================" << endl
+             << "        [ REBEL ALLIANCE LISTING ]       " << endl
+             << "=========================================" << endl;
+
         string name = inputString("Crew Name: ");
         int rank = rankDecode("Rank: ");
         if (searchCrew(Root, name, rankN) != NULL)
         {
-            cout << "[-] " << name << "  sudah terdaftar di Database Rebel Alliance!" << endl;
+            cout << "[-] " << name << "  has listed in Rebel Alliance database!" << endl;
             system("pause");
             return;
         }
@@ -141,11 +147,11 @@ void displayAZ()
     holdCrews(Root, crews, indexCrew);
     sortCrew(crews, total, 1);
 
-    cout << "======= Active Personnel Database =======" << endl;
     for(int i = 0; i < total; i++)
     {
-        cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
+        if (crews[i] -> status != 3) cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
     }
+    cout << "=========================================" << endl;
 }
 
 void displayZA()
@@ -173,11 +179,11 @@ void displayZA()
     holdCrews(Root, crews, indexCrew);
     sortCrew(crews, total, 2);
 
-    cout << "======= Active Personnel Database =======" << endl;
     for(int i = 0; i < total; i++)
     {
-        cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
+        if (crews[i] -> status != 3) cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
     }
+    cout << "=========================================" << endl;
 }
 
 void displayRankAsc()
@@ -205,11 +211,11 @@ void displayRankAsc()
     holdCrews(Root, crews, indexCrew);
     sortCrew(crews, total, 3);
 
-    cout << "======= Active Personnel Database =======" << endl;
     for(int i = 0; i < total; i++)
     {
-        cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
+        if (crews[i] -> status != 3) cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
     }
+    cout << "=========================================" << endl;
 }
 
 void displayRankDesc()
@@ -237,14 +243,65 @@ void displayRankDesc()
     holdCrews(Root, crews, indexCrew);
     sortCrew(crews, total, 4);
 
-    cout << "======= Active Personnel Database =======" << endl;
+
     for(int i = 0; i < total; i++)
     {
-        cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
+        if (crews[i] -> status != 3) cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
+    }
+    cout << "=========================================" << endl;
+}
+
+void displayActive()
+{
+    displayAZ();
+    string choice;
+    while(choice != "X")
+    {
+        choice = inputString("[A] A-Z [Z] Z-A [+] Rank Asc [-] Rank Desc\n[-] Filter: ");
+        if(choice == "A")
+        {
+            system("cls");
+            displayAZ();
+        }
+        else if(choice == "Z")
+        {
+            system("cls");
+            displayZA();
+        }
+        else if(choice == "+")
+        {
+            system("cls");
+            displayRankAsc();
+        }
+        else if(choice == "-")
+        {
+            system("cls");
+            displayRankDesc();
+        }
     }
 }
 
-Crew* deleteCrew(Crew* root)
+void crewMenu()
 {
-
+    system("cls");
+    cout << "=========================================" << endl
+         << "              [ CREW MENU ]             " << endl
+         << "=========================================" << endl
+         << "1. New Crew" << endl << endl
+         << "2. Search Crew" << endl << endl
+         << "3. All Active Crew" << endl << endl
+         << "=========================================" << endl;
+    int opt = inputInt("[-] Choice: ");
+    if (opt == 1) 
+    {
+        addNewCrew();
+    }
+    else if (opt == 2)
+    {
+        
+    }
+    else if (opt == 3)
+    {
+        displayCrewtoShip();
+    }
 }

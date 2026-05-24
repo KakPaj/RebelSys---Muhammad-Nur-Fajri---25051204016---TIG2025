@@ -6,7 +6,6 @@ using namespace std;
 struct Squadron
 {
     string squadName;
-    string nameShip;
 
     Spaceship* headShip = NULL;
     Squadron* next = NULL;
