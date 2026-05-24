@@ -6,5 +6,6 @@ R2-D2|Lieutenant|1|0|NONE
 Sabine Wren|Captain|2|2|Ghost
 Zeb|Captain|2|2|Ghost
 Hera Syndulla|General|6|2|Ghost
+Saw Gerrera|Colonel|5|0|NONE
 Leia Organa|General|6|0|NONE
 Mon Mothma|General|6|0|NONE

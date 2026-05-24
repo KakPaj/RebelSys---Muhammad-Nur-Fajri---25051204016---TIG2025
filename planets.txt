@@ -18,3 +18,4 @@ Exegol
 Ilum
 Dathomir
 Corellia
+Hott
