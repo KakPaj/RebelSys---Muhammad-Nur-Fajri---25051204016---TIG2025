@@ -41,7 +41,7 @@ void discoverPlanet()
          << "         [ DISCOVER NEW PLANET ]         " << endl
          << "=========================================" << endl;
 
-    string name = inputString(" Enter Planet Name: ");
+    string name = inputString("Enter Planet Name: ");
 
     if (searchPlanet(name) != NULL)
     {
@@ -88,9 +88,9 @@ void addHyperspaceRoute()
         return;
     }
 
-    string origin = inputString(" Origin Planet      : ");
-    string dest = inputString(" Destination Planet : ");
-    int dist = inputInt(" Jump Distance (Ly) : ");
+    string origin = inputString("Origin Planet      : ");
+    string dest = inputString("Destination Planet : ");
+    int dist = inputInt("Jump Distance (Ly) : ");
 
     Planet* pOrigin = searchPlanet(origin);
     Planet* pDest = searchPlanet(dest);
@@ -211,13 +211,13 @@ void displaySafeRoute()
     resetVisited(); 
     int totalDistance = 0;
 
-    cout << "\n Calculating hyperspace jumps..." << endl;
-    cout << " Route: " << pDest -> planetName; 
+    cout << "\nCalculating hyperspace jumps..." << endl;
+    cout << "Route: " << pDest -> planetName; 
 
     if (initFindRoute(pOrigin, pDest, 0, totalDistance))
     {
-        cout << "\n\n [+] Safe Route Found!" << endl;
-        cout << " [+] Total Distance: " << totalDistance << " Lightyears" << endl;
+        cout << "\n\n[+] Safe Route Found!" << endl;
+        cout << "[+] Total Distance: " << totalDistance << " Lightyears" << endl;
     }
     else
     {
@@ -252,7 +252,7 @@ void mappingMenu()
         }
         else if (opt == 3)
         {
-            displayMap;
+            displayMap();
         }
         else if (opt == 4)
         {

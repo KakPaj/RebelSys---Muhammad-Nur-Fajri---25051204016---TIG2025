@@ -19,16 +19,16 @@ struct Spaceship
 #include "crew.hpp"
 #include "squadron.hpp"
 
-extern Crew* Root;
+extern Crew* RootCR;
 Crew* searchCrew(Crew* root, string name, int rank);
 
 void assignShip(Squadron* hangarDock[], string squadTarget, string cSign, string nameShip)
 {
     Squadron* squadron = searchSquadron(hangarDock, squadTarget);
 
-    if (squadTarget == "")
+    if (squadron == NULL)
     {
-        cout << "[-] Invalid Squadron. Access Terminated. . .";
+        cout << endl << "[-] Invalid Squadron. Access Terminated. . .";
         system("pause");
         return;
     }
@@ -41,8 +41,8 @@ void assignShip(Squadron* hangarDock[], string squadTarget, string cSign, string
     newShip -> next = squadron -> headShip;
     squadron -> headShip = newShip;
 
-    cout << "[+] " << cSign << " has joined with " << squadron -> squadName << endl
-         << "=========================================" << endl;
+    cout << endl << "[+] " << cSign << " has joined with " << squadron -> squadName << endl
+                 << "=========================================" << endl;
 }
 
 void initiateAssignShip()
@@ -75,11 +75,11 @@ void displayFleet(Spaceship* headShip, string squadName)
     cout << "=========================================" << endl
          << "         [ HANGAR FLEET MONITOR ]        " << endl
          << "=========================================" << endl
-         << "[ " << squadName << " Squadron ]";
+         << "[ " << squadName << " Squadron ]" << endl;
 
     if (headShip == NULL)
     {
-        cout << "[-] Squadron empty. Access Terminated. . ." << endl;
+        cout << endl << "[-] Squadron empty. Access Terminated. . ." << endl;
         system("pause");
         return;
     }
@@ -161,14 +161,14 @@ void displayCrewtoShip()
         return;   
     }
 
-    Crew* crewTargeted = searchCrew(Root, name, rankNum);
+    Crew* crewTargeted = searchCrew(RootCR, name, rankNum);
     if (crewTargeted == NULL)
     {
         cout << "[-] Crew " << name << " not found. Access Terminated. . ." << endl;
         system("pause");
         return;     
     }
-    cout << "[-] Processing assignment. . .";
+    cout << "[-] Processing assignment. . ." << endl;
     system("pause");
     assignCrewtoShip(shipTargeted, crewTargeted);
     return;
@@ -206,7 +206,7 @@ void displayCrewinShip(Spaceship* ship)
         numbering++;
     }
 
-    cout << endl << endl << "=========================================" << endl;
+    cout << endl << "=========================================" << endl;
     system("pause");
     return;
 }
@@ -215,12 +215,12 @@ void initiateDisplayCrewinShip()
 {
     system("cls");
     cout << "=========================================" << endl
-         << "           [ SHIP CREWS MONITOR ]        " << endl
+         << "          [ SHIP CREWS MONITOR ]         " << endl
          << "=========================================" << endl << endl;
     string squad = inputString("Squadron: ");
-    string ship = inputString("\n\nCallsign: ");
+    string ship = inputString("\nCallsign: ");
 
-    cout << endl << endl << "=========================================" << endl;
+    cout << endl << "=========================================" << endl;
 
     Squadron* squadTargeted = searchSquadron(hangarDock, squad);
     if (squadTargeted == NULL)
@@ -238,7 +238,7 @@ void initiateDisplayCrewinShip()
         return;   
     }
 
-    cout << "[-] Processing unit search. . .";
+    cout << "[-] Processing unit search. . ." << endl;
     system("pause");
     displayCrewinShip(shipTargeted);
     return;
@@ -314,30 +314,40 @@ if (squad == NULL || ship == NULL || squad -> headShip == NULL) return;
 
 void fleetMenu()
 {
-    system("cls");
-    cout << "=========================================" << endl
-         << "              [ FLEET MENU ]             " << endl
-         << "=========================================" << endl
-         << "1. New Ship" << endl << endl
-         << "2. Fleet Monitor" << endl << endl
-         << "3. Assign Crew to Ship" << endl << endl
-         << "4. Ship Crew(s) Info"  << endl << endl
-         << "=========================================" << endl;
-    int opt = inputInt("[-] Choice: ");
-    if (opt == 1) 
+    bool back = false;
+    while (!back)
     {
-        initiateAssignShip();
+        system("cls");
+        cout << "=========================================" << endl
+            << "              [ FLEET MENU ]             " << endl
+            << "=========================================" << endl
+            << "1. New Ship" << endl << endl
+            << "2. Fleet Monitor" << endl << endl
+            << "3. Assign Crew to Ship" << endl << endl
+            << "4. Ship Crew(s) Info"  << endl << endl
+            << "5. Back to Command Center" << endl << endl
+            << "=========================================" << endl;
+        int opt = inputInt("[-] Choice: ");
+        if (opt == 1) 
+        {
+            initiateAssignShip();
+        }
+        else if (opt == 2)
+        {
+            initiateDisplayFleet();
+        }
+        else if (opt == 3)
+        {
+            displayCrewtoShip();
+        }
+        else if (opt == 4)
+        {
+            initiateDisplayCrewinShip();
+        }
+        else if (opt == 5)
+        {
+            back = true;
+        }
     }
-    else if (opt == 2)
-    {
-        initiateDisplayFleet();
-    }
-    else if (opt == 3)
-    {
-        displayCrewtoShip();
-    }
-    else if (opt == 4)
-    {
-        initiateDisplayCrewinShip();
-    }
+
 }

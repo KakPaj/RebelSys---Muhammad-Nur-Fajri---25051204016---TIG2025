@@ -57,13 +57,3 @@ Squadron* searchSquadron(Squadron* hangarDock[], string squadName)
     }
     return NULL;
 }
-
-void displayHangar()
-{
-
-}
-
-void squadronMenu()
-{
-
-}

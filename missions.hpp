@@ -110,20 +110,32 @@ void addMission()
 
 void displayMissionsBoard(Missions* root)
 {
+    bool isAny = false;
     if (root != NULL)
     {
+        
         displayMissionsBoard(root -> left);
 
         Missions* temp = root;
         while (temp != NULL)
         {
-            cout << "ID: " << temp -> missionID << " | Level: " << temp -> missionLevel
-                 << " | " << temp -> missionName << " (" << temp -> targetPlanet << ") | "
-                 << temp -> daysLeft << " Days | Status: " << temp -> endStatus << endl;
-            temp = temp -> next;
+            if (temp -> daysLeft != 0)
+            {
+                cout << "ID: " << temp -> missionID << " | Level: " << temp -> missionLevel
+                    << " | " << temp -> missionName << " (" << temp -> targetPlanet << ") | "
+                    << temp -> daysLeft << " Days | Status: " << temp -> endStatus << endl;
+                temp = temp -> next;
+                isAny = true;
+            }
         }
 
         displayMissionsBoard(root -> right);
+    }
+
+    if (isAny == false)
+    {
+        cout << "[-] No missions posted on the board yet." << endl;
+        system("pause");
     }
 }
 
@@ -134,7 +146,7 @@ void initMissionBoard()
          << "         [ AVAILABLE MISSIONS ]          " << endl
          << "=========================================" << endl;
             
-    if (Root == NULL) 
+    if (RootMS == NULL) 
     {
         cout << "[-] No missions posted on the board yet." << endl;
     }
@@ -223,6 +235,7 @@ void startMission(int level, int id, string squad, Spaceship* ship)
         temp = temp -> next;
     }
 
+    targMission -> squadron = squad;
     targMission -> deployedShip = ship;
     targMission -> endStatus = "On-Going";
     targMission -> next = NULL;
@@ -249,10 +262,10 @@ void displayStartMission()
                  << "         [ DEPLOY FOR MISSION ]          " << endl
                  << "=========================================" << endl;
 
-    int id = inputInt("Target Mission ID: ");
-    int level = inputInt("Target Mission Level: ");
-    string squad = inputString("Squadron: ");
-    string ship = inputString("Deploy: Ship ");
+    int id = inputInt("\nTarget Mission ID: ");
+    int level = inputInt("\nTarget Mission Level: ");
+    string squad = inputString("\nSquadron: ");
+    string ship = inputString("\nDeploy: Ship ");
 
     Squadron* squadTargeted = searchSquadron(hangarDock, squad);
     if (squadTargeted == NULL)
@@ -292,8 +305,8 @@ void finishMission(Missions* targMission)
     cout << endl << "=========================================" << endl
                  << "        [ MISSION RESULT REPORT ]        " << endl
                  << "=========================================" << endl << endl;
-    cout << " Target: " << targMission -> targetPlanet << " (Lvl " << targMission -> missionLevel << ")" << endl;
-    cout << " Combat Score: " << finalScore << endl;
+    cout << "Target: " << targMission -> targetPlanet << " (Lvl " << targMission -> missionLevel << ")" << endl;
+    cout << "Combat Score: " << finalScore << endl;
 
     if (finalScore >= (targMission -> missionLevel * 15))
     {
@@ -318,6 +331,7 @@ void finishMission(Missions* targMission)
         }
         Squadron* squad = searchSquadron(hangarDock, targMission -> squadron);
         destroyShip(squad, ship);
+        
     }
     cout << "=========================================\n" << endl;
 
@@ -380,7 +394,7 @@ void activeMission()
 {
     system("cls");
     cout << "=========================================" << endl
-         << " 	        [ DEPLOYED FLEETS ] 	      " << endl
+         << "           [ DEPLOYED FLEETS ]           " << endl
          << "=========================================" << endl << endl;
 
     if (activeQueueFront == NULL) cout << "[-] No fleets are currently deployed." << endl;
@@ -399,7 +413,7 @@ void missionLog()
 {
     system("cls");
     cout << "=========================================" << endl
-         << " 	       [ MISSION HISTORY LOG ] 	      " << endl
+         << "          [ MISSION HISTORY LOG ]        " << endl
          << "=========================================" << endl << endl;
 
     if (missionLogStackTop == NULL) cout << "[-] No missions have been concluded yet." << endl;
@@ -421,15 +435,15 @@ void missionMenu()
     {
         system("cls");
         cout << "=========================================" << endl
-            << "           [ MISSION TERMINAL ]          " << endl
-            << "=========================================" << endl
-            << "1. New Mission" << endl << endl
-            << "2. Mission Board" << endl << endl
-            << "3. Deploy Fleet" << endl << endl
-            << "4. Active Deployed Fleet" << endl << endl
-            << "5. Mission Log" << endl << endl
-            << "6. Return to Command Center" << endl << endl
-            << "=========================================" << endl;
+             << "           [ MISSION TERMINAL ]          " << endl
+             << "=========================================" << endl << endl
+             << "1. New Mission" << endl << endl
+             << "2. Mission Board" << endl << endl
+             << "3. Deploy Fleet" << endl << endl
+             << "4. Active Deployed Fleet" << endl << endl
+             << "5. Mission Log" << endl << endl
+             << "6. Return to Command Center" << endl << endl
+             << "=========================================" << endl;
         int opt = inputInt("[-] Choice: ");
         if (opt == 1) 
         {

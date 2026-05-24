@@ -1,0 +1,3 @@
+Endor|Lothal|15
+Endor|Yavin|10
+Lothal|Yavin|40

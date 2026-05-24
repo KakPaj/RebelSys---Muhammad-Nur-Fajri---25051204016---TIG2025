@@ -34,29 +34,3 @@ float inputFloat(string prompt) {
     try { return stof(temp); } catch (...) { return 0.0; }
 }
 
-int getString(string input, string output[], char divider = ',')
-{
-    int count = 0;
-    string temp;
-    for (int i = 0; i < input.length(); i++)
-    {
-        if (input[i] == divider)
-        {
-            int start = 0;
-            while (start < temp.length() && temp[start] == ' ') start++;
-            if (start < temp.length()) output[count++] = temp.substr(start);
-            temp = "";
-        }
-        else
-        {
-            temp += input[i];
-        }
-    }
-    if (temp != "")
-    {
-        int start = 0;
-        while (start < temp.length() && temp[start] == ' ') start++;
-        if (start < temp.length()) output[count++] = temp.substr(start);
-    }
-    return count;
-}

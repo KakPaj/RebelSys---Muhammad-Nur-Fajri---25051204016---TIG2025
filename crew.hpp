@@ -74,7 +74,7 @@ void addNewCrew()
         string rank = inputString("Rank: ");
         int rankNum = ranktoNum(rank);
 
-        if (searchCrew(Root, name, rankNum) != NULL) 
+        if (searchCrew(RootCR, name, rankNum) != NULL) 
         {
             cout << "[-] " << name << " has already been listed in the Rebel Alliance database!" << endl;
             system("pause");
@@ -91,7 +91,7 @@ void addNewCrew()
         newCrew -> left = NULL;
         newCrew -> right = NULL;
 
-        Root = insertCrew(Root, newCrew);
+        RootCR = insertCrew(RootCR, newCrew);
 
         cout << "[+] " << name << " successfully recruited!" << endl;
         cout << "=========================================" << endl;
@@ -349,27 +349,79 @@ void displayActive()
     }
 }
 
-void crewMenu()
+void displaySearchCrew(Crew* target)
+{
+    if (target == NULL)
+    {
+        cout << "\n[-] Crew member not found in the database." << endl;
+    }
+    else
+    {
+        cout << endl << "=========================================" << endl
+                     << "             [ CREW DETAIL ]             " << endl
+                     << "=========================================" << endl
+                     << " Name   : " << target -> crewName << endl
+                     << " Rank   : " << target -> rankName << endl;
+        
+        cout << " Status : ";
+        if (target->status == 0) cout << "Standby (Base)" << endl;
+        else if (target->status == 1) cout << "Assigned (On Ship)" << endl;
+        else if (target->status == 2) cout << "Deployed (On Mission)" << endl;
+        else if (target->status == 3) cout << "K.I.A (Killed In Action)" << endl;
+        
+        cout << "=========================================\n" << endl;
+    }
+}
+
+void initSearchCrew()
 {
     system("cls");
     cout << "=========================================" << endl
-         << "              [ CREW MENU ]             " << endl
-         << "=========================================" << endl
-         << "1. New Crew" << endl << endl
-         << "2. Search Crew" << endl << endl
-         << "3. All Active Crew" << endl << endl
+         << "        [ SEARCH CREW DATABASE ]         " << endl
          << "=========================================" << endl;
-    int opt = inputInt("[-] Choice: ");
-    if (opt == 1) 
+         
+    string name = inputString("Name: ");
+    string rank = inputString("Rank: ");
+    int rankNM = ranktoNum(rank);
+    
+    Crew* foundCrew = searchCrew(RootCR, name, rankNM);
+    
+    displaySearchCrew(foundCrew);
+    
+    system("pause");
+}
+
+void crewMenu()
+{
+    bool back = false;
+    while (!back)
     {
-        addNewCrew();
+        system("cls");
+        cout << "=========================================" << endl
+            << "              [ CREW MENU ]             " << endl
+            << "=========================================" << endl
+            << "1. New Crew" << endl << endl
+            << "2. Search Crew" << endl << endl
+            << "3. All Active Crew" << endl << endl
+            << "4. Back to Command Center" << endl << endl
+            << "=========================================" << endl;
+        int opt = inputInt("[-] Choice: ");
+        if (opt == 1) 
+        {
+            addNewCrew();
+        }
+        else if (opt == 2)
+        {
+            initSearchCrew();
+        }
+        else if (opt == 3)
+        {
+            displayActive();
+        }
+        else if (opt = 4)
+        {
+            back = true;
+        }
     }
-    else if (opt == 2)
-    {
-        
-    }
-    else if (opt == 3)
-    {
-        displayActive();
-    }
+
 }

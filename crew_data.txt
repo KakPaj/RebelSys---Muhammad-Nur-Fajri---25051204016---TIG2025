@@ -1,0 +1,7 @@
+Luke Skywalker|Commander|4|0|NONE
+Kanan Jarrus|Captain|2|0|NONE
+Ezra Bridger|Captain|2|0|NONE
+Chopper|Lieutenant|1|0|NONE
+Sabine Wren|Captain|2|0|NONE
+Zeb|Captain|2|0|NONE
+Hera Syndulla|General|5|0|NONE

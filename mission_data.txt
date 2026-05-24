@@ -1,0 +1,2 @@
+1261|Meeting-1|1|Endor|0|SUCCESS|Red|NONE
+2487|Steal Fuel|4|Yavin|0|FAILED|Red|NONE
