@@ -2,6 +2,9 @@
 #include <iostream>
 using namespace std;
 
+struct Crew;
+struct Squadron;
+
 struct Spaceship
 {
     string callSign;
@@ -12,8 +15,12 @@ struct Spaceship
     Spaceship* next;
 };
 
+#include "input.hpp"
 #include "crew.hpp"
 #include "squadron.hpp"
+
+extern Crew* Root;
+Crew* searchCrew(Crew* root, string name, int rank);
 
 void assignShip(Squadron* hangarDock[], string squadTarget, string cSign, string nameShip)
 {
@@ -132,15 +139,16 @@ void displayCrewtoShip()
          << "            [ CREW ASSIGNMENT ]          " << endl
          << "=========================================" << endl << endl;
     string squad = inputString("Squadron: ");
-    string ship = inputString("\n\nCallsign: ");
-    string name = inputString("\n\nCrew Name: ");
-    int rank = rankDecode("\n\nRank: ");
+    string ship = inputString("\nCallsign: ");
+    string name = inputString("\nCrew Name: ");
+    string rank = inputString("\nRank: ");
+    int rankNum = ranktoNum(rank);
     cout << endl << endl << "=========================================" << endl;
 
     Squadron* squadTargeted = searchSquadron(hangarDock, squad);
     if (squadTargeted == NULL)
     {
-        cout << "[-] Squadron " << squad << " not found. Access Terminated. . .";
+        cout << "[-] Squadron " << squad << " not found. Access Terminated. . ." << endl;
         system("pause");
         return;
     }
@@ -148,15 +156,15 @@ void displayCrewtoShip()
     Spaceship* shipTargeted = searchShip(squadTargeted -> headShip, ship);
     if (shipTargeted == NULL)
     {
-        cout << "[-] Ship " << ship << " not found. Access Terminated. . .";
+        cout << "[-] Ship " << ship << " not found. Access Terminated. . ." << endl;
         system("pause");
         return;   
     }
 
-    Crew* crewTargeted = searchCrew(Root, name, rank);
+    Crew* crewTargeted = searchCrew(Root, name, rankNum);
     if (crewTargeted == NULL)
     {
-        cout << "[-] Crew " << name << " not found. Access Terminated. . .";
+        cout << "[-] Crew " << name << " not found. Access Terminated. . ." << endl;
         system("pause");
         return;     
     }
@@ -280,6 +288,28 @@ void unassignKillCrew(Spaceship* ship, Crew* crew, int status)
     else if (status == 3) cout << "[-] " << crew -> crewName << " deceased in action. . ." << endl;
     
     return;
+}
+
+void destroyShip(Squadron* squad, Spaceship* ship)
+{
+if (squad == NULL || ship == NULL || squad -> headShip == NULL) return;
+
+    Spaceship* temp = squad -> headShip;
+    Spaceship* prev = NULL;
+
+    while (temp != NULL && temp != ship)
+    {
+        prev = temp;
+        temp = temp -> next;
+    }
+
+    if (temp == NULL) return; 
+
+    if (prev == NULL) squad -> headShip = temp -> next;
+    else prev -> next = temp -> next;
+
+    string destroyedCallSign = temp -> callSign;
+    delete temp;
 }
 
 void fleetMenu()

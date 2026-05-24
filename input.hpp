@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include "crew.hpp"
 using namespace std;
 
 bool close = false;
@@ -18,22 +17,15 @@ int inputInt(string prompt) {
     try { return stoi(temp); } catch (...) { return 0; }
 }
 
-int rankDecode(string prompt)
+int ranktoNum(string rank)
 {
-    string holdPrompt = prompt;
-    string rankNM = inputString(prompt);
-    if (rankNM == "Lieutenant") return 1;
-    else if (rankNM == "Captain") return 2;
-    else if (rankNM == "Major") return 3;
-    else if (rankNM == "Commander") return 4;
-    else if (rankNM == "Colonel") return 5;
-    else if (rankNM == "General") return 6;
-    else 
-    {
-        cout << "[-] Invalid Rank! Reprocessing. . ." << endl;
-        system("pause");
-        rankDecode(holdPrompt);
-    }
+    if (rank == "Lieutenant") return 1;
+    else if (rank == "Captain") return 2;
+    else if (rank == "Major") return 3;
+    else if (rank == "Commander") return 4;
+    else if (rank == "Colonel") return 5;
+    else if (rank == "General") return 6;
+    else return 0;
 }
 
 float inputFloat(string prompt) {

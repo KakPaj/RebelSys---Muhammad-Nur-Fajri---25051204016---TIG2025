@@ -1,15 +1,20 @@
 #pragma once
 #include <iostream>
-#include "spaceship.hpp"
+
 using namespace std;
+
+struct Spaceship;
 
 struct Squadron
 {
     string squadName;
+    int squadStatus;
 
     Spaceship* headShip = NULL;
     Squadron* next = NULL;
 };
+
+#include "spaceship.hpp"
 
 const int HANGAR = 15;
 Squadron* hangarDock[HANGAR] = {NULL};
@@ -53,12 +58,12 @@ Squadron* searchSquadron(Squadron* hangarDock[], string squadName)
     return NULL;
 }
 
-void addShip()
+void displayHangar()
 {
 
 }
 
-void displayHangar()
+void squadronMenu()
 {
 
 }

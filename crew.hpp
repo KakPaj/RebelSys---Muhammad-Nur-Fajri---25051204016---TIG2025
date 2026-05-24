@@ -1,8 +1,9 @@
 #pragma once
 #include <iostream>
-#include "input.hpp"
-#include "spaceship.hpp"
+
 using namespace std;
+
+struct Spaceship;
 
 struct Crew
 {
@@ -19,7 +20,10 @@ struct Crew
     Crew* next = NULL;
 };
 
-Crew* Root = NULL;
+#include "input.hpp"
+#include "spaceship.hpp"
+
+Crew* RootCR = NULL;
 string name;
 int rankN;
 string rankNM;
@@ -27,19 +31,38 @@ string rankNM;
 Crew* insertCrew(Crew* root, Crew* newCrew)
 {
     if (root == NULL) return newCrew;
-    if (newCrew -> rankNum < root -> rankNum) return root -> left = insertCrew(root -> left, newCrew);
-    return root -> right = insertCrew(root -> right, newCrew);
+    if (newCrew  ->  rankNum < root  ->  rankNum) 
+    {
+        root  ->  left = insertCrew(root  ->  left, newCrew);
+    }
+    else if (newCrew  ->  rankNum > root  ->  rankNum) 
+    {
+        root -> right = insertCrew(root  ->  right, newCrew);
+    }
+    else 
+    {
+        if (newCrew  ->  crewName < root  ->  crewName)
+        {
+            root  ->  left = insertCrew(root  ->  left, newCrew);
+        }
+        else if (newCrew  ->  crewName > root  ->  crewName)
+        {
+            root  ->  right = insertCrew(root  ->  right, newCrew);
+        }
+    }
+    return root; 
 }
 
 Crew* searchCrew(Crew* root, string name, int rank)
 {
-    if (root == NULL || root -> crewName == name) return root;
-    if (root -> rankNum > rank) return searchCrew(root -> left, name, rank);
-    return searchCrew(root -> right, name, rank);
+    if (root == NULL || root  ->  crewName == name) return root;
+    if (root  ->  rankNum > rank) return searchCrew(root  ->  left, name, rank);
+    return searchCrew(root  ->  right, name, rank);
 }
 
 void addNewCrew()
 {
+    bool close = false;
     while (!close)
     {
         system("cls");
@@ -48,31 +71,48 @@ void addNewCrew()
              << "=========================================" << endl;
 
         string name = inputString("Crew Name: ");
-        int rank = rankDecode("Rank: ");
-        if (searchCrew(Root, name, rankN) != NULL)
+        string rank = inputString("Rank: ");
+        int rankNum = ranktoNum(rank);
+
+        if (searchCrew(Root, name, rankNum) != NULL) 
         {
-            cout << "[-] " << name << "  has listed in Rebel Alliance database!" << endl;
+            cout << "[-] " << name << " has already been listed in the Rebel Alliance database!" << endl;
             system("pause");
             return;
         }
-        Crew* newCrew = new Crew{name, rankN, rankNM};
+
+
+        Crew* newCrew = new Crew();
+        newCrew -> crewName = name;
+        newCrew -> rankName = rank;
+        newCrew -> rankNum = rankNum;
+        newCrew -> status = 0;
+        newCrew -> homeShip = NULL;
+        newCrew -> left = NULL;
+        newCrew -> right = NULL;
+
         Root = insertCrew(Root, newCrew);
+
+        cout << "[+] " << name << " successfully recruited!" << endl;
+        cout << "=========================================" << endl;
+        system("pause");
+        close = true;
     }
 }
 
 int sumCrew(Crew* root)
 {
     if (root == NULL) return 0;
-    return 1 + sumCrew(root -> left) + sumCrew(root -> right);
+    return 1 + sumCrew(root  ->  left) + sumCrew(root  ->  right);
 }
 
 void holdCrews(Crew* root, Crew* crews[], int& indexCrew)
 {
     if (root == NULL) return;
-    holdCrews(root -> left, crews, indexCrew);
+    holdCrews(root  ->  left, crews, indexCrew);
     crews[indexCrew] = root;
     indexCrew += 1;
-    holdCrews(root -> right, crews, indexCrew);
+    holdCrews(root  ->  right, crews, indexCrew);
     return;
 }
 
@@ -85,28 +125,28 @@ void sortCrew(Crew* crews[], int total, int mode)
         {
             if (mode == 1)
             {
-                if (crews[j] -> crewName < crews[hold] -> crewName)
+                if (crews[j]  ->  crewName < crews[hold]  ->  crewName)
                 {
                     hold = j;
                 }
             }
             else if (mode == 2)
             {
-                if (crews[j] -> crewName > crews[hold] -> crewName)
+                if (crews[j]  ->  crewName > crews[hold]  ->  crewName)
                 {
                     hold = j;
                 }
             }
             else if (mode == 3)
             {
-                if (crews[j] -> rankNum > crews[hold] -> rankNum)
+                if (crews[j]  ->  rankNum > crews[hold]  ->  rankNum)
                 {
                     hold = j;
                 }
             }
             else if (mode == 4)
             {
-                if (crews[j] -> rankNum < crews[hold] -> rankNum)
+                if (crews[j]  ->  rankNum < crews[hold]  ->  rankNum)
                 {
                     hold = j;
                 }
@@ -124,16 +164,19 @@ void sortCrew(Crew* crews[], int total, int mode)
 
 void displayAZ()
 {
-    int total = sumCrew(Root);
+    int total = sumCrew(RootCR);
     if (total == 0)
     {
         string answer;
-        while (answer != "Decline" || answer != "decline" || answer != "D")
+        while (answer != "Decline" && answer != "decline" && answer != "D")
         {
-            answer = inputString("[-] Crew(s) not found. Initiate add a new crew . . . \n [-] Choice(Accept/Decline): ");
+            answer = inputString("[-] Crew(s) not found. Initiate add a new crew . . . \n[-] Choice(Accept/Decline): ");
             if (answer == "Accept" || answer == "accept" || answer == "A")
             {
                 addNewCrew();
+                answer = "D";
+                total = sumCrew(RootCR);
+                system("cls");
             }
             else
             {
@@ -144,28 +187,35 @@ void displayAZ()
 
     Crew* crews[total];
     int indexCrew = 0;
-    holdCrews(Root, crews, indexCrew);
+    holdCrews(RootCR, crews, indexCrew);
     sortCrew(crews, total, 1);
+
+    cout << "=========================================" << endl
+         << "           [ ALL ACTIVE CREW ]           " << endl
+         << "================== A-Z ==================" << endl;
 
     for(int i = 0; i < total; i++)
     {
-        if (crews[i] -> status != 3) cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
+        if (crews[i]  ->  status != 3) cout << i + 1 << ". " << crews[i]  ->  crewName << " - " << crews[i]  ->  rankName << endl;
     }
     cout << "=========================================" << endl;
 }
 
 void displayZA()
 {
-    int total = sumCrew(Root);
+    int total = sumCrew(RootCR);
     if (total == 0)
     {
         string answer;
-        while (answer != "Decline" || answer != "decline" || answer != "D")
+        while (answer != "Decline" && answer != "decline" && answer != "D")
         {
-            answer = inputString("[-] Crew(s) not found. Initiate add a new crew . . . \n [-] Choice(Accept/Decline): ");
+            answer = inputString("[-] Crew(s) not found. Initiate add a new crew . . . \n[-] Choice(Accept/Decline): ");
             if (answer == "Accept" || answer == "accept" || answer == "A")
             {
                 addNewCrew();
+                answer = "D";
+                total = sumCrew(RootCR);
+                system("cls");
             }
             else
             {
@@ -176,28 +226,35 @@ void displayZA()
 
     Crew* crews[total];
     int indexCrew = 0;
-    holdCrews(Root, crews, indexCrew);
+    holdCrews(RootCR, crews, indexCrew);
     sortCrew(crews, total, 2);
+
+    cout << "=========================================" << endl
+         << "           [ ALL ACTIVE CREW ]           " << endl
+         << "================== Z-A ==================" << endl;
 
     for(int i = 0; i < total; i++)
     {
-        if (crews[i] -> status != 3) cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
+        if (crews[i]  ->  status != 3) cout << i + 1 << ". " << crews[i]  ->  crewName << " - " << crews[i]  ->  rankName << endl;
     }
     cout << "=========================================" << endl;
 }
 
 void displayRankAsc()
 {
-    int total = sumCrew(Root);
+    int total = sumCrew(RootCR);
     if (total == 0)
     {
         string answer;
-        while (answer != "Decline" || answer != "decline" || answer != "D")
+        while (answer != "Decline" && answer != "decline" && answer != "D")
         {
-            answer = inputString("[-] Crew(s) not found. Initiate add a new crew . . . \n [-] Choice(Accept/Decline): ");
+            answer = inputString("[-] Crew(s) not found. Initiate add a new crew . . . \n[-] Choice(Accept/Decline): ");
             if (answer == "Accept" || answer == "accept" || answer == "A")
             {
                 addNewCrew();
+                answer = "D";
+                total = sumCrew(RootCR);
+                system("cls");
             }
             else
             {
@@ -208,28 +265,35 @@ void displayRankAsc()
 
     Crew* crews[total];
     int indexCrew = 0;
-    holdCrews(Root, crews, indexCrew);
+    holdCrews(RootCR, crews, indexCrew);
     sortCrew(crews, total, 3);
+
+    cout << "=========================================" << endl
+         << "           [ ALL ACTIVE CREW ]           " << endl
+         << "=============== RANK ASC ================" << endl;
 
     for(int i = 0; i < total; i++)
     {
-        if (crews[i] -> status != 3) cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
+        if (crews[i]  ->  status != 3) cout << i + 1 << ". " << crews[i]  ->  crewName << " - " << crews[i]  ->  rankName << endl;
     }
     cout << "=========================================" << endl;
 }
 
 void displayRankDesc()
 {
-    int total = sumCrew(Root);
+    int total = sumCrew(RootCR);
     if (total == 0)
     {
         string answer;
-        while (answer != "Decline" || answer != "decline" || answer != "D")
+        while (answer != "Decline" && answer != "decline" && answer != "D")
         {
-            answer = inputString("[-] Crew(s) not found. Initiate add a new crew . . . \n [-] Choice(Accept/Decline): ");
+            answer = inputString("[-] Crew(s) not found. Initiate add a new crew . . . \n[-] Choice(Accept/Decline): ");
             if (answer == "Accept" || answer == "accept" || answer == "A")
             {
                 addNewCrew();
+                answer = "D";
+                total = sumCrew(RootCR);
+                system("cls");
             }
             else
             {
@@ -240,30 +304,34 @@ void displayRankDesc()
 
     Crew* crews[total];
     int indexCrew = 0;
-    holdCrews(Root, crews, indexCrew);
+    holdCrews(RootCR, crews, indexCrew);
     sortCrew(crews, total, 4);
 
+    cout << "=========================================" << endl
+         << "           [ ALL ACTIVE CREW ]           " << endl
+         << "=============== RANK DESC ===============" << endl;
 
     for(int i = 0; i < total; i++)
     {
-        if (crews[i] -> status != 3) cout << i + 1 << ". " << crews[i] -> crewName << " - " << crews[i] -> rankName << endl;
+        if (crews[i]  ->  status != 3) cout << i + 1 << ". " << crews[i]  ->  crewName << " - " << crews[i]  ->  rankName << endl;
     }
     cout << "=========================================" << endl;
 }
 
 void displayActive()
 {
+    system("cls");
     displayAZ();
     string choice;
-    while(choice != "X")
+    while(choice != "X" && choice != "x")
     {
-        choice = inputString("[A] A-Z [Z] Z-A [+] Rank Asc [-] Rank Desc\n[-] Filter: ");
-        if(choice == "A")
+        choice = inputString("[A] A-Z [Z] Z-A [+] Rank Asc [-] Rank Desc [X] Exit\n[-] Filter: ");
+        if(choice == "A" || choice == "a")
         {
             system("cls");
             displayAZ();
         }
-        else if(choice == "Z")
+        else if(choice == "Z" || choice == "z")
         {
             system("cls");
             displayZA();
@@ -302,6 +370,6 @@ void crewMenu()
     }
     else if (opt == 3)
     {
-        displayCrewtoShip();
+        displayActive();
     }
 }
