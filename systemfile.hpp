@@ -224,8 +224,7 @@ void loadMissions()
         m -> daysLeft = stoi(data[4]);
         m -> endStatus = data[5];
         m -> squadron = data[6];
-        
-        // Link Ship
+
         string shipCall = data[7];
         m -> deployedShip = NULL;
         if (shipCall != "NONE") {
